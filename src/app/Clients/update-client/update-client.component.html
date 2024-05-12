@@ -1,0 +1,33 @@
+<form [formGroup]="updateClientForm" (ngSubmit)="updateClient()">
+    <div class="form-group">
+      <label for="firstname">Nombre:</label>
+      <input type="text" class="form-control" id="firstname" formControlName="firstname" required>
+    </div>
+  
+    <div class="form-group">
+      <label for="lastname">Apellido:</label>
+      <input type="text" class="form-control" id="lastname" formControlName="lastname" required>
+    </div>
+  
+    <div class="form-group">
+      <label for="email">Correo electrónico:</label>
+      <input type="email" class="form-control" id="email" formControlName="email" required>
+    </div>
+  
+    <div class="form-group">
+      <label for="address">Dirección:</label>
+      <input type="text" class="form-control" id="address" formControlName="address" required>
+    </div>
+  
+    <div class="form-group">
+      <label for="photo">Foto:</label>
+      <input type="file" class="form-control" id="photo" formControlName="photo">
+    </div>
+  
+    <div class="form-group">
+      <label for="caption">Descripción:</label>
+      <textarea class="form-control" id="caption" formControlName="caption" rows="3"></textarea>
+    </div>
+  
+    <button type="submit" class="btn btn-primary">Editar cliente</button>
+  </form>
