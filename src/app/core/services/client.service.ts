@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@angular/core';
 import { Client } from '../entities/client';
 import { HttpClient } from '@angular/common/http';
 import { TOTS_CORE_PROVIDER, TotsBaseHttpService, TotsCoreConfig } from '@tots/core';
-import { Observable, catchError } from 'rxjs';
+import { Observable, Subject, catchError, tap } from 'rxjs';
 import { ApiResponse } from '../entities/api-response';
 
 
@@ -12,7 +12,7 @@ import { ApiResponse } from '../entities/api-response';
 export class ClientService extends TotsBaseHttpService<Client> {
 
   private baseUrl = 'https://agency-coda.uc.r.appspot.com';
-
+  private clientUpdatedSubject = new Subject<Client>();
   constructor(
     @Inject(TOTS_CORE_PROVIDER) protected override config: TotsCoreConfig,
     protected override http: HttpClient,
@@ -46,11 +46,17 @@ export class ClientService extends TotsBaseHttpService<Client> {
     return this.http.post<Client>(url, body);
   }
 
+  getClientUpdatedObservable(): Observable<Client> {
+    console.log("estoy adentro de getClientUpdatedObservable");
+    return this.clientUpdatedSubject.asObservable();
+  }
+
   updateClient(id: number, clientUpdates: Partial<Client>): Observable<Client> {
     // Implement logic to update the client using the provided ID and clientUpdates object
     const url = `${this.baseUrl}/client/save`;
 
     const body = {
+      id: clientUpdates.id,
       firstname: clientUpdates.firstname,
       lastname: clientUpdates.lastname,
       email: clientUpdates.email,
@@ -60,7 +66,9 @@ export class ClientService extends TotsBaseHttpService<Client> {
     };
 
     // Example using HTTP (replace with your actual implementation)
-    return this.http.post<Client>(url, body);
+    return this.http.post<Client>(url, body).pipe(
+      tap(updatedClient => this.clientUpdatedSubject.next(updatedClient))
+    );
   } 
 
    /**
@@ -70,8 +78,6 @@ export class ClientService extends TotsBaseHttpService<Client> {
    */
    deleteClient(clientId: number) {
     const url = `${this.baseUrl}/client/remove`;
-
     return this.http.delete<Client>(`${url}/${clientId}`);
   }
-
 }

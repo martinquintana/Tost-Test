@@ -1,4 +1,44 @@
-table {
-    width: 100%;
-  }
+// table {
+//     width: 100%;
+//   }
+
+//   // Estilos para el título
+// h1 {
+//   text-align: center; // Alinear el título al centro
+//   margin-bottom: 20px; // Espacio entre el título y el primer campo de formulario
+// }
   
+h1 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.mat-elevation-z8 {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  overflow-x: auto; // Permite desplazarse horizontalmente en dispositivos pequeños
+}
+
+.mat-header-cell,
+.mat-cell {
+  padding: 12px;
+}
+
+.button-container button {
+  margin-right: 10px;
+}
+
+@media (max-width: 600px) {
+  .mat-header-cell,
+  .mat-cell {
+    font-size: 14px; // Tamaño de fuente reducido en dispositivos pequeños
+  }
+}

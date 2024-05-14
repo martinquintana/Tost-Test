@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
 import { Client } from 'src/app/core/entities/client';
 import { ClientService } from 'src/app/core/services/client.service';
 
@@ -14,7 +15,7 @@ export class UpdateClientComponent {
   @Output() onClientUpdated: EventEmitter<Client>;
 
   updateClientForm: FormGroup;
-  submitted = false;
+  // submitted = false;
   // client: Client = {} as Client;
 
   constructor(
@@ -37,16 +38,7 @@ export class UpdateClientComponent {
   }
 
   updateClient() {
-    // console.log("estoy dentro de addProduct");
-    this.submitted = true;
-
-    /*si es invalido termina la ejecucion del modulo
-    //y no se ejecuta el console.log, ni el servicio
-    es una validacion*/
-    // if (this.createClientForm.invalid) {
-    //   console.log("no pasa la verificacion");
-    //   return;
-    // }
+   
 
     const CLIENT: Partial<Client> = {
       id: this.client.id,
@@ -59,12 +51,13 @@ export class UpdateClientComponent {
     }
     this.clientService.updateClient(this.client.id, CLIENT)
       .subscribe(client => {
-        // console.log("estoy dentro de createproduct");
+        console.log("se actualizo el client.");
         console.table(client);
+        this.onClientUpdated.emit(client);
         this.dialogRef.close(client);
         // this.dialogRef.close(product);
         // this.router.navigate(['/users']);
-        this.onClientUpdated.emit(client);
+        
       });
   }
   
