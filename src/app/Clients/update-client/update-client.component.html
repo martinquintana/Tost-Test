@@ -1,37 +1,35 @@
 <h1 mat-dialog-title>Editar cliente</h1>
 <form [formGroup]="updateClientForm" (ngSubmit)="updateClient()">
   <mat-form-field appearance="outline">
-    <mat-label>Nombre:</mat-label>
-      <input formControlName="firstname" matInput required placeholder="Nombre">
+    <mat-label>Nombre</mat-label>
+    <input formControlName="firstname" matInput placeholder="Nombre">
   </mat-form-field>
 
 
   <mat-form-field appearance="outline">
-    <mat-label>Apellido:</mat-label>
-    <input formControlName="lastname" matInput required placeholder="Apellido">
+    <mat-label>Apellido</mat-label>
+    <input formControlName="lastname" matInput placeholder="Apellido">
   </mat-form-field>
 
   <mat-form-field appearance="outline">
-    <mat-label>email:</mat-label>
-    <input formControlName="email" matInput required placeholder="email">
-  </mat-form-field>
-
-
-  <mat-form-field appearance="outline">
-    <mat-label>Dirección:</mat-label>
-    <input formControlName="address" matInput required placeholder="Dirección">
-  </mat-form-field>
-
-  <mat-form-field appearance="outline">
-    <mat-label>Foto:</mat-label>
-    <input formControlName="photo" matInput required placeholder="Foto">
+    <mat-label>email</mat-label>
+    <input formControlName="email" matInput placeholder="email">
   </mat-form-field>
 
 
   <mat-form-field appearance="outline">
-    <mat-label>Descripción:</mat-label>
-    
-      <input formControlName="caption" matInput required placeholder="Descripción">
+    <mat-label>Dirección</mat-label>
+    <input formControlName="address" matInput placeholder="Dirección">
+  </mat-form-field>
+
+  <div class="form-group">
+    <label for="photo"> </label>
+    <input type="file" class="form-control" id="photo" formControlName="photo">
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Caption</mat-label>
+    <input formControlName="caption" matInput placeholder="Caption">
   </mat-form-field>
 
 

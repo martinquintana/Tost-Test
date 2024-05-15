@@ -5,6 +5,9 @@ import { ApiResponse } from '../../core/entities/api-response'
 import { MatTableDataSource } from '@angular/material/table';
 import { UpdateClientComponent } from '../update-client/update-client.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { GenericResponse } from 'src/app/core/entities/response';
+import { ClientListService } from 'src/app/core/services/clientList.service';
+import { CreateClientComponent } from '../create-client/create-client.component';
 
 @Component({
   selector: 'app-client-list',
@@ -19,87 +22,61 @@ export class ClientListComponent {
   myClientsArray = new MatTableDataSource<Client>(this.clients as Client[]); // Type cast
 
   matDialogRef: MatDialogRef<UpdateClientComponent> = {} as MatDialogRef<UpdateClientComponent>;
-
+  MatDialogRefCrateClient: MatDialogRef<CreateClientComponent> = {} as MatDialogRef<CreateClientComponent>;
   constructor(
-    private clientsServices: ClientService,
+    private clientService: ClientService,
     private matDialog: MatDialog,
-  ) {
-
-  }
+    private dialog: MatDialog,
+    private clientListService: ClientListService,
+  ) { }
 
   ngOnInit() {
-    this.fetchClients();
     this.subscribeToClientUpdates();
+    this.fetchClientsFromService();
   }
 
-  /**
- *esto no esta funcionando.
- */
-  // subscribeToClientUpdates() {
-  //   this.clientsServices.getClientUpdatedObservable().subscribe(updatedClient => {
-  //     let i: number = 0;
-  //     console.log('updatedClient: ', updatedClient);
-  //     console.log("clientid: " + updatedClient.id);
-  //     while (i < this.clients.length) {
-  //       if (this.clients[i].id === updatedClient.id) {
-  //         console.log("estoy adentro del while.")
-  //         this.clients[i] = updatedClient;
-  //         this.myClientsArray = new MatTableDataSource(this.clients);
-  //       }
-  //       i++;
-  //     }
-  //   });
-  // }
-
-
-  //obtener todos los clientes
-  fetchClients() {
-    this.clientsServices.getClientList()
-      .subscribe((res: ApiResponse<Client>) => {
-        this.clients = res.response.data;
-        this.myClientsArray.data = this.clients; // Update data source
-        // console.table(this.myClientsArray);
-        // console.table(this.clients);
-      });
-  }
-
-
-
-  openDialogUpdateClient(client: Client) {
-    // console.table(client);
-    this.matDialogRef = this.matDialog.open(UpdateClientComponent, { data: client });
-
-    // Obtener los datos del componente hijo
-    this.matDialogRef.componentInstance.onClientUpdated.subscribe(clientRes => {
-      console.log('Got the data!', clientRes);
-      console.log('clientRes: ', clientRes.id)
-      this.updateClientFromClients(clientRes, clientRes.id);
+  // Suscribirse a las actualizaciones de la lista de clientes
+  subscribeToClientUpdates() {
+    this.clientListService.clientList$.subscribe(clients => {
+      this.myClientsArray.data = clients;
     });
   }
 
-  /**
- * Actualiza un cliente del arreglo clients.
- */
-  updateClientFromClients(client: Client, clientId: number) {
-    console.log("estoy en updateClientFromClients");
-    let i: number = 0;
-    console.log('client: ', client);
-    console.log("clientid: " + clientId);
-    while (i < this.clients.length) {
-      if (this.clients[i].id === clientId) {
-        console.log("estoy adentro del while.")
-        this.clients[i] = client;
-        this.myClientsArray = new MatTableDataSource(this.clients);
-      }
-      i++;
+  fetchClientsFromService() {
+    this.clientService.getClientList().subscribe((res: ApiResponse<GenericResponse<Client>>) => {
+      this.clientListService.setClientList(res.response.data);
     }
+    )
+  }
+
+  //obtener todos los clientes
+  fetchClients() {
+    this.clientService.getClientList()
+      .subscribe((res: ApiResponse<GenericResponse<Client>>) => {
+        this.clients = res.response.data;
+        this.myClientsArray.data = this.clients; // Update data source
+      });
+  }
+
+  openDialogUpdateClient(client: Client) {
+    this.matDialogRef = this.matDialog.open(UpdateClientComponent, { data: client });
+    // Obtener los datos del componente hijo
+    this.matDialogRef.componentInstance.onClientUpdated.subscribe(clientRes => {
+      this.clientListService.updateClient(clientRes);
+    });
   }
 
   openDeleteClient(clientId: number): void {
-    // this.deleteDialog.open(this.dialog, DataType.User, () => this.deleteUser(userId));
-    this.clientsServices.deleteClient(clientId)
-      .subscribe(rta => {
-        console.log(rta);
-      });
+    this.clientService.deleteClient(clientId).subscribe(() => {
+      this.clientListService.deleteClient(clientId);
+    });
+  }
+
+  openDialogCreateClient() {
+    this.MatDialogRefCrateClient = this.matDialog.open(CreateClientComponent);
+    // Obtener los datos del componente hijo
+    this.MatDialogRefCrateClient.componentInstance.onClientCreate.subscribe(clientRes => {
+      this.clientListService.addClient(clientRes);
+    });
   }
 }

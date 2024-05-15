@@ -2,6 +2,7 @@ import { Component, EventEmitter, Inject, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
+import { ApiResponse } from 'src/app/core/entities/api-response';
 import { Client } from 'src/app/core/entities/client';
 import { ClientService } from 'src/app/core/services/client.service';
 
@@ -15,8 +16,6 @@ export class UpdateClientComponent {
   @Output() onClientUpdated: EventEmitter<Client>;
 
   updateClientForm: FormGroup;
-  // submitted = false;
-  // client: Client = {} as Client;
 
   constructor(
     private fb: FormBuilder,
@@ -25,21 +24,17 @@ export class UpdateClientComponent {
     @Inject(MAT_DIALOG_DATA) private client: Client,
   ) {
     this.updateClientForm = this.fb.group({
-      firstname: ['', Validators.compose([Validators.required, Validators.maxLength(45)])],
-      lastname: ['', Validators.compose([Validators.required, Validators.maxLength(45)])],
-      email: ['', Validators.compose([Validators.required, Validators.maxLength(45)])],
-      address: ['', Validators.compose([Validators.required, Validators.maxLength(45)])],
-      photo: ['', Validators.required], // Local file
-      caption: ['', Validators.compose([Validators.required, Validators.maxLength(45)])],
+      firstname: [client.firstname, Validators.compose([Validators.required, Validators.maxLength(45)])],
+      lastname: [client.lastname, Validators.compose([Validators.required, Validators.maxLength(45)])],
+      email: [client.email, Validators.compose([Validators.required, Validators.maxLength(45)])],
+      address: [client.address, Validators.compose([Validators.required, Validators.maxLength(45)])],
+      photo: [client.photo, Validators.required], // Local file
+      caption: [client.caption, Validators.compose([Validators.required, Validators.maxLength(45)])],
     });
-
     this.onClientUpdated = new EventEmitter();
-
   }
 
   updateClient() {
-   
-
     const CLIENT: Partial<Client> = {
       id: this.client.id,
       firstname: this.updateClientForm.value.firstname,
@@ -51,14 +46,9 @@ export class UpdateClientComponent {
     }
     this.clientService.updateClient(this.client.id, CLIENT)
       .subscribe(client => {
-        console.log("se actualizo el client.");
-        console.table(client);
-        this.onClientUpdated.emit(client);
-        this.dialogRef.close(client);
-        // this.dialogRef.close(product);
-        // this.router.navigate(['/users']);
-        
+        this.onClientUpdated.emit(client.response);
+        this.dialogRef.close(client.response);
       });
   }
-  
+
 }

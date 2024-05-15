@@ -19,7 +19,9 @@ mat-form-field {
   width: 100%;
   margin-bottom: 20px; // Espacio entre los campos de formulario
 }
-
+.form-group {
+  margin-bottom: 20px;
+}
 // Estilos para los botones
 button {
   margin-top: 20px; // Espacio entre el último campo de formulario y los botones

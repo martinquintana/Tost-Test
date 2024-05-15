@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Client } from 'src/app/core/entities/client';
 import { ClientService } from 'src/app/core/services/client.service';
 
@@ -9,14 +10,14 @@ import { ClientService } from 'src/app/core/services/client.service';
   styleUrls: ['./create-client.component.scss']
 })
 export class CreateClientComponent {
-
+  @Output() onClientCreate: EventEmitter<Client>;
   createClientForm: FormGroup;
-  submitted = false;
   client: Client = {} as Client;
 
   constructor(
     private fb: FormBuilder,
     private clientService: ClientService,
+    private dialogRef: MatDialogRef<CreateClientComponent>,
   ) {
     this.createClientForm = this.fb.group({
       firstname: ['', Validators.compose([Validators.required, Validators.maxLength(45)])],
@@ -26,20 +27,10 @@ export class CreateClientComponent {
       photo: ['', Validators.required], // Local file
       caption: ['', Validators.compose([Validators.required, Validators.maxLength(45)])],
     });
+    this.onClientCreate = new EventEmitter();
   }
 
   addClient() {
-    // console.log("estoy dentro de addProduct");
-    this.submitted = true;
-
-    /*si es invalido termina la ejecucion del modulo
-    //y no se ejecuta el console.log, ni el servicio
-    es una validacion*/
-    // if (this.createClientForm.invalid) {
-    //   console.log("no pasa la verificacion");
-    //   return;
-    // }
-
     const CLIENT: Client = {
       id: this.client.id,
       firstname: this.createClientForm.value.firstname,
@@ -54,10 +45,8 @@ export class CreateClientComponent {
     }
     this.clientService.createClient(CLIENT)
       .subscribe(client => {
-        // console.log("estoy dentro de createproduct");
-        console.table(client);
-        // this.dialogRef.close(product);
-        // this.router.navigate(['/users']);
+        this.onClientCreate.emit(CLIENT);
+        this.dialogRef.close(CLIENT);
       });
   }
 }

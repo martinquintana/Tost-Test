@@ -1,86 +1,36 @@
 <h1 mat-dialog-title>Agregar nuevo cliente</h1>
 
 <form [formGroup]="createClientForm" (ngSubmit)="addClient()">
-  <!-- <div class="form-group">
-      <label for="firstname">Nombre:</label>
-      <input type="text" class="form-control" id="firstname" formControlName="firstname" required>
-    </div> -->
 
   <mat-form-field appearance="outline">
     <mat-label>Nombre:</mat-label>
-    <!-- <input type="text" class="form-control" id="firstname" formControlName="firstname" matInput required
-      placeholder="Nombre"> -->
-      <input formControlName="firstname" matInput required placeholder="Nombre">
+    <input formControlName="firstname" matInput required placeholder="Nombre">
   </mat-form-field>
-
-  <!-- <div class="form-group">
-      <label for="lastname">Apellido:</label>
-      <input type="text" class="form-control" id="lastname" formControlName="lastname" required>
-    </div> -->
 
   <mat-form-field appearance="outline">
     <mat-label>Apellido:</mat-label>
-    <!-- <input type="text" class="form-control" id="lastname" formControlName="lastname" required placeholder="Apellido"> -->
     <input formControlName="lastname" matInput required placeholder="Apellido">
   </mat-form-field>
 
-  <!-- <div class="form-group">
-    <label for="email">Correo electrónico:</label>
-    <input type="email" class="form-control" id="email" formControlName="email" required>
-  </div> -->
-
   <mat-form-field appearance="outline">
     <mat-label>email:</mat-label>
-    <!-- <input type="email" class="form-control" id="email" formControlName="email" required placeholder="email"> -->
     <input formControlName="email" matInput required placeholder="email">
   </mat-form-field>
 
-  <!-- <div class="form-group">
-    <label for="address">Dirección:</label>
-    <input type="text" class="form-control" id="address" formControlName="address" required>
-  </div> -->
-
   <mat-form-field appearance="outline">
     <mat-label>Dirección:</mat-label>
-    <!-- <input type="text" class="form-control" id="address" formControlName="address" required placeholder="Dirección"> -->
     <input formControlName="address" matInput required placeholder="Dirección">
   </mat-form-field>
 
   <div class="form-group">
     <label for="photo"> </label>
     <input type="file" class="form-control" id="photo" formControlName="photo">
-  </div> 
-
-  <!--<mat-form-field appearance="outline">
-    <mat-label>Foto:</mat-label>
-    <input type="file" class="form-control" id="photo" formControlName="photo" required placeholder="Foto"> 
-    <input type="file" formControlName="photo" matInput required placeholder="Foto">
-  </mat-form-field>-->
-
-  <!-- <div class="form-group">
-    <label for="caption">Descripción:</label>
-    <textarea class="form-control" id="caption" formControlName="caption" rows="3"></textarea>
-  </div> -->
+  </div>
 
   <mat-form-field appearance="outline">
-    <mat-label>Descripción:</mat-label>
-    <!-- <input type="text" class="form-control" id="caption" formControlName="caption" rows="3" required
-      placeholder="Descripción"> -->
-      <input formControlName="caption" matInput required placeholder="Descripción">
+    <mat-label>Caption</mat-label>
+    <input formControlName="caption" matInput required placeholder="Caption">
   </mat-form-field>
-
-  <!-- <div class="form-group">
-      <label for="updated_at">Updated At:</label>
-      <input type="text" class="form-control" id="updated_at" disabled>
-    </div>
-    <div class="form-group">
-      <label for="created_at">Created At:</label>
-      <input type="text" class="form-control" id="created_at" disabled>
-    </div>
-    <div class="form-group">
-      <label for="id">ID (Server-Generated):</label>
-      <input type="text" class="form-control" id="id" disabled>
-    </div> -->
 
   <button mat-raised-button color="secundary" type="submit" class="btn btn-primary">Crear cliente</button>
   <button mat-raised-button color="primary" mat-dialog-close>Cancelar</button>

@@ -1,6 +1,12 @@
 <h1>Lista de Clientes:</h1>
+
 <ng-container class="button-container">
-  <a [routerLink]="['/create-client']"><button mat-raised-button color="primary">Crear Cliente</button></a>
+  <button mat-raised-button color="primary">
+    <a (click)="openDialogCreateClient()">
+      Crear Cliente
+    </a>
+  </button>
+  <!-- <a [routerLink]="['/create-client']"><button mat-raised-button color="primary">Crear Cliente</button></a> -->
 </ng-container>
 
 <table mat-table [dataSource]="myClientsArray" class="mat-elevation-z8">

@@ -2,8 +2,9 @@ import { Inject, Injectable } from '@angular/core';
 import { Client } from '../entities/client';
 import { HttpClient } from '@angular/common/http';
 import { TOTS_CORE_PROVIDER, TotsBaseHttpService, TotsCoreConfig } from '@tots/core';
-import { Observable, Subject, catchError, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, catchError, tap } from 'rxjs';
 import { ApiResponse } from '../entities/api-response';
+import { GenericResponse } from '../entities/response';
 
 
 @Injectable({
@@ -12,7 +13,9 @@ import { ApiResponse } from '../entities/api-response';
 export class ClientService extends TotsBaseHttpService<Client> {
 
   private baseUrl = 'https://agency-coda.uc.r.appspot.com';
-  private clientUpdatedSubject = new Subject<Client>();
+  private clientsSubject = new BehaviorSubject<Client[]>([]);
+  clients$: Observable<Client[]> = this.clientsSubject.asObservable();
+
   constructor(
     @Inject(TOTS_CORE_PROVIDER) protected override config: TotsCoreConfig,
     protected override http: HttpClient,
@@ -22,12 +25,19 @@ export class ClientService extends TotsBaseHttpService<Client> {
     this.basePathUrl = 'client';
   }
 
-  getClientList(): Observable<ApiResponse <Client>> {
-    const url = `${this.baseUrl}/client/list`;
+  // getClientList(): Observable<ApiResponse <Client>> {
+  //   const url = `${this.baseUrl}/client/list`;
 
-    return this.http.post<ApiResponse <Client>>(url, {});
+  //   return this.http.post<ApiResponse <Client>>(url, {}).subscribe(res => {
+  //     this.clientsSubject.next(res.response.data);
+  //   });
+  // }
+
+  getClientList(): Observable<ApiResponse<GenericResponse<Client>>> {
+    const url = `${this.baseUrl}/client/list`;
+    return this.http.post<ApiResponse<GenericResponse<Client>>>(url, {});
   }
-  
+
   // createClient(): Observable<ApiResponse <Client>> {
   //   return this.http.post<ApiResponse <Client>>(`${this.baseUrl}/client/save`, {});
   // }
@@ -46,12 +56,12 @@ export class ClientService extends TotsBaseHttpService<Client> {
     return this.http.post<Client>(url, body);
   }
 
-  getClientUpdatedObservable(): Observable<Client> {
-    console.log("estoy adentro de getClientUpdatedObservable");
-    return this.clientUpdatedSubject.asObservable();
-  }
+  // getClientUpdatedObservable(): Observable<Client> {
+  //   console.log("estoy adentro de getClientUpdatedObservable");
+  //   return this.clientUpdatedSubject.asObservable();
+  // }
 
-  updateClient(id: number, clientUpdates: Partial<Client>): Observable<Client> {
+  updateClient(id: number, clientUpdates: Partial<Client>): Observable<ApiResponse<Client>> {
     // Implement logic to update the client using the provided ID and clientUpdates object
     const url = `${this.baseUrl}/client/save`;
 
@@ -66,17 +76,15 @@ export class ClientService extends TotsBaseHttpService<Client> {
     };
 
     // Example using HTTP (replace with your actual implementation)
-    return this.http.post<Client>(url, body).pipe(
-      tap(updatedClient => this.clientUpdatedSubject.next(updatedClient))
-    );
-  } 
+    return this.http.post<ApiResponse<Client>>(url, body);
+  }
 
-   /**
-   * elimina un cliente.
-   * @param clientId Identificador del client.
-   * @returns {Observable<Client>} El cliente eliminado.
-   */
-   deleteClient(clientId: number) {
+  /**
+  * elimina un cliente.
+  * @param clientId Identificador del client.
+  * @returns {Observable<Client>} El cliente eliminado.
+  */
+  deleteClient(clientId: number) {
     const url = `${this.baseUrl}/client/remove`;
     return this.http.delete<Client>(`${url}/${clientId}`);
   }
